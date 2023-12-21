@@ -65,8 +65,8 @@ class OnBoardingViewController: UIViewController {
         return view
     }()
     
-     
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initUI()
@@ -153,23 +153,23 @@ class OnBoardingViewController: UIViewController {
             let vc = NotesViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
-        }
+    }
+}
+
+extension OnBoardingViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        titles.count
     }
     
-    extension OnBoardingViewController: UICollectionViewDataSource {
-        
-        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            titles.count
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnBoardingCell.reuseId, for: indexPath) as! OnBoardingCell
-            cell.setup(title: titles[indexPath.row], imageName: images[indexPath.row], label: labels[indexPath.row])
-            return cell
-        }
-        
-        
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnBoardingCell.reuseId, for: indexPath) as! OnBoardingCell
+        cell.setup(title: titles[indexPath.row], imageName: images[indexPath.row], label: labels[indexPath.row])
+        return cell
     }
+    
+    
+}
 extension OnBoardingViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)

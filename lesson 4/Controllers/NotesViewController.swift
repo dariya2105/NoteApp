@@ -13,8 +13,6 @@ class NotesViewController: UIViewController {
     
     private var notes: [Note] = []
     
-    private var colors: [UIColor] = [.systemPink, .systemBlue, .systemBrown, .systemOrange]
-    
     private var filteredNotes: [Note] = []
     
     private lazy var noteSearchBar: UISearchBar = {
@@ -180,9 +178,10 @@ extension NotesViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseId, for: indexPath) as! NoteCell
-        let randomColor = colors.randomElement()
-        cell.backgroundColor = randomColor
-        cell.setup(title: filteredNotes[indexPath.row].title ?? "")
+        cell.setup(title: filteredNotes[indexPath.row].title ?? "",  details: filteredNotes[indexPath.row].details ?? "")
+        
+        let randomColor = CustomColor.random()
+           cell.backgroundColor = UIColor(named: randomColor.rawValue)
         return cell
     }
     
@@ -191,6 +190,13 @@ extension NotesViewController: UICollectionViewDataSource {
 extension NotesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: (view.frame.size.width - 58) / 2, height: 100)
-        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailViewController = AddNoteViewController()
+        let item = filteredNotes[indexPath.row]
+        detailViewController.note = item
+        detailViewController.isNewNote = false
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }

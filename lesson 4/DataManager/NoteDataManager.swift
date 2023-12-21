@@ -31,7 +31,14 @@ final class NoteDataManager: NSObject {
         
         let note = Note(entity: noteEntity, insertInto: context)
         note.id = id
-        note.title = title
+        
+        let titleWords = title.components(separatedBy: " ") //title.components(separatedBy: " ") разбивает строку заголовка title на массив слов, где разделителем является пробел.
+        if titleWords.count >= 2 {
+            note.title = titleWords.prefix(2).joined(separator: " ") //prefix(2) - берет первые два элемента из массива titleWords и объединяет их в строку, разделяя пробелом, присваиваем полученное значение свойству note.title
+        } else {
+            note.title = title
+        }
+        
         note.details = description
         note.date = date
         

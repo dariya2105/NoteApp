@@ -24,6 +24,9 @@
 		CE8B79D92B1E215D009994C8 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8B79D82B1E215D009994C8 /* NotesViewController.swift */; };
 		CE8B79DE2B1E2160009994C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE8B79DD2B1E2160009994C8 /* Assets.xcassets */; };
 		CE8B79E12B1E2160009994C8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE8B79DF2B1E2160009994C8 /* LaunchScreen.storyboard */; };
+		CEB9B4582B3353F9000D7DC9 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9B4572B3353F9000D7DC9 /* Colors.swift */; };
+		CEB9B45A2B348934000D7DC9 /* LanguageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9B4592B348934000D7DC9 /* LanguageCell.swift */; };
+		CEB9B45C2B348CAA000D7DC9 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9B45B2B348CAA000D7DC9 /* Language.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		CE8B79DD2B1E2160009994C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE8B79E02B1E2160009994C8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE8B79E22B1E2160009994C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEB9B4572B3353F9000D7DC9 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		CEB9B4592B348934000D7DC9 /* LanguageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCell.swift; sourceTree = "<group>"; };
+		CEB9B45B2B348CAA000D7DC9 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,7 @@
 				CE7BBB082B2A14FF003F69E2 /* NoteCell.swift */,
 				CE7BBB022B237188003F69E2 /* OnBoardingCell.swift */,
 				CE7BBAFD2B234BA0003F69E2 /* SettingsCell.swift */,
+				CEB9B4592B348934000D7DC9 /* LanguageCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -111,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				CE7D69082B20AE80004F023E /* Settings.swift */,
+				CEB9B4572B3353F9000D7DC9 /* Colors.swift */,
+				CEB9B45B2B348CAA000D7DC9 /* Language.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -220,6 +229,8 @@
 			files = (
 				CE7BBB152B2ADDA2003F69E2 /* NoteDataManager.swift in Sources */,
 				CE7BBB0C2B2A1C87003F69E2 /* AddNoteViewController.swift in Sources */,
+				CEB9B45A2B348934000D7DC9 /* LanguageCell.swift in Sources */,
+				CEB9B45C2B348CAA000D7DC9 /* Language.swift in Sources */,
 				CE7BBB132B2A273B003F69E2 /* Note+CoreDataProperties.swift in Sources */,
 				CE8B79D92B1E215D009994C8 /* NotesViewController.swift in Sources */,
 				CE8B79D52B1E215D009994C8 /* AppDelegate.swift in Sources */,
@@ -227,6 +238,7 @@
 				CE7BBB012B235CB6003F69E2 /* OnBoardingViewController.swift in Sources */,
 				CE7D69072B1E26A1004F023E /* SettingsViewController.swift in Sources */,
 				CE7D69092B20AE80004F023E /* Settings.swift in Sources */,
+				CEB9B4582B3353F9000D7DC9 /* Colors.swift in Sources */,
 				CE7BBB122B2A273B003F69E2 /* Note+CoreDataClass.swift in Sources */,
 				CE7BBB0F2B2A2656003F69E2 /* Notes.xcdatamodeld in Sources */,
 				CE7D690F2B20B263004F023E /* LanguageController.swift in Sources */,

@@ -9,6 +9,8 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
+    let noteDataManager = NoteDataManager.shared
+    
     private let settingsTableView = UITableView()
     
     private var settings = [
@@ -71,8 +73,45 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         let settingItem = settings[indexPath.row]
         cell.setUp(image: settingItem.image, title: settingItem.title, type: settingItem.type)
         cell.delegate = self
-        cell.backgroundColor = .systemGray5
+        cell.backgroundColor = .systemGray6
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 2 {
+            let alert = UIAlertController(title: "Удаление", message: "Вы действительно хотите удалить заметки?", preferredStyle: .alert)
+            let actionAccept = UIAlertAction(title: "Да", style: .cancel) { action in
+                self.noteDataManager.deleteAllNotes()
+            }
+            let actionCancel = UIAlertAction(title: "Нет", style: .default) { action in
+
+            }
+            alert.addAction(actionAccept)
+            alert.addAction(actionCancel)
+
+            present(alert, animated: true)
+        }
+        
+//        swith indexPath.row {
+//        case 0:
+//            ()
+//        case 1:
+//            ()
+//        case 2:
+//            (
+//        let alert = UIAlertController(title: "Удаление", message: "Вы действительно хотите удалить заметки?", preferredStyle: .alert)
+//        let actionAccept = UIAlertAction(title: "Да", style: .cancel) { action in
+//            self.noteDataManager.deleteAllNotes()
+//        }
+//        let actionCancel = UIAlertAction(title: "Нет", style: .default) { action in
+//
+//        }
+//        alert.addAction(actionAccept)
+//        alert.addAction(actionCancel)
+//
+//        present(alert, animated: true)
+//        )
+//        }
     }
 }
 
@@ -87,9 +126,11 @@ extension SettingsViewController: SettingCellDelegate {
             overrideUserInterfaceStyle = .light
         }
     }
-    
+
     func didSelectLanguage() {
         let languageSelectionVC = LanguageController()
         present(languageSelectionVC, animated: true, completion: nil)
     }
 }
+
+

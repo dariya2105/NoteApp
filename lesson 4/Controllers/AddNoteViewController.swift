@@ -8,9 +8,15 @@
 import Foundation
 import UIKit
 
-class AddNoteViewController: UIViewController, UITextFieldDelegate {
+class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
     private let noteDataManager = NoteDataManager.shared
+    
+    private var id: String?
+    
+    var note: Note?
+    
+    var isNewNote = true
     
     private lazy var titleTF: UITextField = {
         let view = UITextField()
@@ -31,26 +37,26 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    private lazy var notesTF: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Написать"
+    private lazy var notesTV: UITextView = {
+        let view = UITextView()
         view.backgroundColor = .systemGray3
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 14, weight: .regular)
         return view
     }()
     
     private lazy var dateLabel: UILabel = {
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .systemGray3
-            label.textAlignment = .center
-            return label
-        }()
+        label.textAlignment = .center
+        return label
+    }()
     
     private lazy var saveBtn: UIButton = {
         let view = UIButton(type: .system)
-        view.backgroundColor = UIColor(red: 1, green: 0.237, blue: 0.237, alpha: 1)
+        view.backgroundColor = .lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setTitleColor(.white, for: .normal)
         view.layer.cornerRadius = 20
@@ -62,22 +68,49 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         title = "Settings"
-        let settingsBtn = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(settingBtnTapped))
-        navigationItem.rightBarButtonItem = settingsBtn
+        
+        if isNewNote == true {
+            let settingsBtn = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(settingBtnTapped))
+            navigationItem.rightBarButtonItem = settingsBtn
+        } else {
+            let trashBtn = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(trashBtnTapped))
+            navigationItem.rightBarButtonItem = trashBtn
+        }
         initUI()
-        updateSettingsButtonColor()
+        updateTrashButtonColor()
+        
+        if let note = note {
+            titleTF.text = note.title
+            notesTV.text = note.details
+            id = note.id
+        }
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            updateSettingsButtonColor()
+    private func updateTrashButtonColor() {
+        let isDarkTheme = traitCollection.userInterfaceStyle == .dark
+        let buttonColor: UIColor = isDarkTheme ? .white : .black
+        navigationItem.rightBarButtonItem?.tintColor = buttonColor
+    }
+    
+    @objc private func trashBtnTapped(_ sender: UIButton ) {
+        guard let id = self.id else {
+            return
         }
-
-        private func updateSettingsButtonColor() {
-            let isDarkTheme = traitCollection.userInterfaceStyle == .dark
-            let buttonColor: UIColor = isDarkTheme ? .white : .black
-            navigationItem.rightBarButtonItem?.tintColor = buttonColor
+        
+        let alert = UIAlertController(title: "Удаление", message: "Вы действительно хотите удалить эту заметку?", preferredStyle: .alert)
+        let actionAccept = UIAlertAction(title: "Да", style: .cancel) { action in
+            self.noteDataManager.deleteNote(id: id )
+            self.navigationController?.popViewController(animated: true)
         }
+        let actionCancel = UIAlertAction(title: "Нет", style: .default) { action in
+            
+        }
+        
+        alert.addAction(actionAccept)
+        alert.addAction(actionCancel)
+        
+        present(alert, animated: true)
+    }
     
     @objc private func settingBtnTapped(_ sender: UIButton ) {
         let vc = SettingsViewController()
@@ -91,8 +124,9 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(grayView)
         setupConstraintsForGrayView()
         
-        grayView.addSubview(notesTF)
+        grayView.addSubview(notesTV)
         setupConstraintsForNoteTF()
+        notesTV.delegate = self
         
         view.addSubview(dateLabel)
         setupConstraintForDateLabel()
@@ -110,19 +144,23 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
             titleTF.heightAnchor.constraint(equalToConstant: 34)
         ])
         addLeftPaddingToTitleTextField()
-
+        titleTF.addTarget(self, action: #selector(titleTFChanged), for: .editingChanged)
+    }
+    
+    @objc private func titleTFChanged() {
+        saveBtn.backgroundColor = UIColor(red: 1, green: 0.237, blue: 0.237, alpha: 1)
     }
     
     private func addLeftPaddingToTitleTextField() {
-            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: titleTF.frame.height))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: titleTF.frame.height))
         titleTF.leftView = paddingView
         titleTF.leftViewMode = .always
-        }
-
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            textField.resignFirstResponder()
-            return true
-        }
+        textField.resignFirstResponder()
+        return true
+    }
     
     private func setupConstraintsForGrayView() {
         NSLayoutConstraint.activate([
@@ -135,31 +173,40 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
     
     private func setupConstraintsForNoteTF() {
         NSLayoutConstraint.activate([
-            notesTF.topAnchor.constraint(equalTo: grayView.topAnchor, constant: 18),
-            notesTF.leadingAnchor.constraint(equalTo: grayView.leadingAnchor, constant: 18),
-            notesTF.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -18),
-            notesTF.bottomAnchor.constraint(equalTo: grayView.bottomAnchor, constant: -18)
+            notesTV.topAnchor.constraint(equalTo: grayView.topAnchor, constant: 18),
+            notesTV.leadingAnchor.constraint(equalTo: grayView.leadingAnchor, constant: 18),
+            notesTV.trailingAnchor.constraint(equalTo: grayView.trailingAnchor, constant: -18),
+            notesTV.bottomAnchor.constraint(equalTo: grayView.bottomAnchor, constant: -18)
         ])
-
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let isNotesTVEmpty = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        if isNotesTVEmpty {
+            saveBtn.backgroundColor = .lightGray
+        } else {
+            saveBtn.backgroundColor = UIColor(red: 1, green: 0.237, blue: 0.237, alpha: 1)
+        }
     }
     
     private func setupConstraintForDateLabel() {
         NSLayoutConstraint.activate([
             dateLabel.topAnchor.constraint(equalTo: grayView.bottomAnchor, constant: 6),
             dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17)
-                ])
+        ])
     }
-
+    
     
     private func updateDateLabel() {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy"
-            
-            let currentDate = Date()
-            let formattedDate = dateFormatter.string(from: currentDate)
-            
-            dateLabel.text = formattedDate
-        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        
+        let currentDate = Date()
+        let formattedDate = dateFormatter.string(from: currentDate)
+        
+        dateLabel.text = formattedDate
+    }
     
     private func setupConstraintsForSaveBtn() {
         NSLayoutConstraint.activate([
@@ -184,17 +231,21 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate {
         saveBtn.backgroundColor = .systemGray4
         let alert = UIAlertController(title: "Сохранение", message: "Вы хотите сохранить?", preferredStyle: .alert)
         let actionAccept = UIAlertAction(title: "Да", style: .cancel) { action in
-            self.noteDataManager.addNote(id: id, title: title, description: "none", date: date)
+            if self.isNewNote == true {
+                self.noteDataManager.addNote(id: id, title: title, description: self.notesTV.text ?? "", date: date)
+            } else {
+                self.noteDataManager.updateNote(id: self.note?.id ?? "", title: title, description: self.notesTV.text ?? "", date: date)
+            }
             self.navigationController?.popViewController(animated: true)
         }
         
         let actionCancel = UIAlertAction(title: "Нет", style: .default) { action in
-            self.saveBtn.backgroundColor = UIColor(red: 1, green: 0.237, blue: 0.237, alpha: 1)
+            
         }
         
         alert.addAction(actionAccept)
         alert.addAction(actionCancel)
-
+        
         present(alert, animated: true)
     }
 }

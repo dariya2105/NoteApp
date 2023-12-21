@@ -15,6 +15,15 @@ class NoteCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 15, weight: .heavy)
+        return view
+    }()
+    
+    private lazy var noteDescriptionLbl: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.font = .systemFont(ofSize: 12, weight: .regular)
+        view.numberOfLines = 3
         return view
     }()
     
@@ -30,9 +39,12 @@ class NoteCell: UICollectionViewCell {
     
     private func initUI() {
         contentView.addSubview(titleLabel)
-        setupConstraintsFortiteLbl()
+        setupConstraintsFortitleLbl()
+        
+        contentView.addSubview(noteDescriptionLbl)
+        setupConstraintsForDescriptionLbl()
     }
-    private func setupConstraintsFortiteLbl() {
+    private func setupConstraintsFortitleLbl() {
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -40,7 +52,16 @@ class NoteCell: UICollectionViewCell {
         ])
     }
     
-    func setup(title: String) {
+    private func setupConstraintsForDescriptionLbl() {
+        NSLayoutConstraint.activate([
+            noteDescriptionLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            noteDescriptionLbl.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            noteDescriptionLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
+        ])
+    }
+    
+    func setup(title: String, details: String) {
         titleLabel.text = title
+        noteDescriptionLbl.text = details
     }
 }
